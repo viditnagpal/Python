@@ -1,0 +1,88 @@
+<?php 
+// C# program to find k'th smallest 
+// element in expected linear time 
+
+// This function returns k'th smallest 
+// element in arr[l..r] using QuickSort based method. 
+// ASSUMPTION: ELEMENTS IN ARR[] ARE DISTINCT 
+function kthSmallest($arr, $l, $r, $k) 
+{ 
+	// If k is smaller than number of elements in array 
+	if ($k > 0 && $k <= $r - $l + 1) 
+	{ 
+		// Partition the array around a random element and 
+		// get position of pivot element in sorted array 
+		$pos = randomPartition($arr, $l, $r); 
+
+		// If position is same as k 
+		if ($pos-$l == $k-1) 
+			return $arr[$pos]; 
+			
+		// If position is more, recur for left subarray 
+		if ($pos-$l > $k-1) 
+			return kthSmallest($arr, $l, $pos-1, $k); 
+
+		// Else recur for right subarray 
+		return kthSmallest($arr, $pos+1, $r, 
+							$k-$pos+$l-1); 
+	} 
+
+	// If k is more than the number of elements in the array 
+	return PHP_INT_MAX; 
+} 
+
+function swap($a, $b) 
+{ 
+	$temp = $a; 
+	$a = $b; 
+	$b = $temp; 
+} 
+
+// Standard partition process of QuickSort(). 
+// It considers the last element as pivot 
+// and moves all smaller element to left 
+// of it and greater elements to right. 
+// This function is used by randomPartition() 
+function partition($arr, $l, $r) 
+{ 
+	$x = $arr[$r]; 
+	$i = $l; 
+	for ($j = $l; $j <= $r - 1; $j++) 
+	{ 
+		if ($arr[$j] <= $x) 
+		{ 
+			list($arr[$i], $arr[$j])=array($arr[$j],$arr[$i]); 
+			//swap(&arr[i], &arr[j]); 
+			$i++; 
+		} 
+	} 
+	list($arr[$i], $arr[$r])=array($arr[$r],$arr[$i]); 
+	//swap(&arr[i], &arr[r]); 
+	return $i; 
+} 
+
+// Picks a random pivot element between 
+// l and r and partitions arr[l..r] around 
+// the randomly picked element using partition() 
+function randomPartition($arr, $l, $r) 
+{ 
+	$n = $r-$l+1; 
+	$pivot = rand() % $n; 
+	
+	list($arr[$l + $pivot], $arr[$r]) = 
+			array($arr[$r],$arr[$l + $pivot] ); 
+	
+	//swap(&arr[l + pivot], &arr[r]); 
+	return partition($arr, $l, $r); 
+} 
+
+// Driver program to test the above methods 
+	$arr = array(12, 3, 5, 7, 4, 19, 260); 
+	$n = sizeof($arr)/sizeof($arr[0]); 
+	$k = 3; 
+	echo "K'th smallest element is " , 
+			kthSmallest($arr, 0, $n-1, $k); 
+	
+
+// This code is contributed by ajit. 
+?> 
